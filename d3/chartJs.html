@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+    div{
+    width: 50vw;
+    height: 50vh;
+    }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+
+
+
+
+
+<div>
+<canvas id="myChart" width="400" height="400"></canvas>
+</div>
+<script src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js' ></script>
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Liverpool','Chelsea','United','Real Madrid','Barcelona','Bayern','Southampton'],
+        datasets: [{
+            label: 'Number of fans(in Millions)',
+            data: [10, 20 , 30 , 35 , 30 , 20 ,8],
+            backgroundColor: [
+                'red','green','yellow','blue','black','orange','purple'
+            ],
+            
+            borderWidth: 0
+        }]
+    },
+    options:{
+        tooltips:{
+            mode:'nearest',
+        },
+        scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Number of fans (in Millions)'
+          },
+
+        }],
+         xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Name of the Club'
+          },
+
+        }],
+
+      }
+
+    },       
+
+});
+</script>
+<!-- <script>
+$(function(){
+    $('#myChart').on('mouseover',function(){
+        console.log($(this).val());
+    })
+});
+</script> -->
+</body>
+</html>

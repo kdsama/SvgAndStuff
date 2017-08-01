@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+    body {
+        font: 14px sans-serif;
+    }
+    
+    .bar {
+        fill: steelblue;
+    }
+    </style>
+</head>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script src = 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js'></script>
+<body>
+    <div ng-app="myApp">
+        <div ng-controller="mainCtrl">
+            <d3-chart width="width" height="height" data="data" onHover="onHover(args)"></d3-chart>
+            <d3-chart-footer></d3-chart-footer>
+        </div>
+    </div>
+    <script>
+
+
+
+
+    var app = angular.module('myApp', []);
+    //1. Implement mainCtrl controller with data (x,y) and other params as required
+    app.controller("clubData", ["$scope", function($scope) {
+  $scope.clubData = [
+    {club: 'Liverpool',fans: 54},
+    {club: 'Chelsea',fans: 66},
+    {club: 'Manchester City',fans: 77},
+    {club: 'United',fans: 70},
+    {club: 'Tottenham',fans: 60},
+    {club: 'Everton',fans: 63},
+    {club: 'Southampton',fans: 55},
+    {club: 'WestBrom',fans: 47}
+   
+  ];
+}]);
+    app.directive("d3-chart", function($window) {
+  return{
+    restrict: "EA",
+    template: "<svg width='850' height='200'></svg>",
+    link: function(scope, elem, attrs){
+
+               var salesDataToPlot=scope[attrs.clubData];
+var padding = 20;
+var pathClass = "path";
+var xScale, yScale, xAxisGen, yAxisGen, lineFun;
+    
+var d3 = $window.d3;
+var rawSvg = elem.find("svg")[0];
+var svg = d3.select(rawSvg);
+function setChartParameters(){
+  xScale = d3.scale.linear()
+             .domain([salesDataToPlot[0].club, salesDataToPlot[salesDataToPlot.length - 1].club])
+             .range([padding + 5, rawSvg.clientWidth - padding]);
+
+              yScale = d3.scale.linear()
+                .domain([0, d3.max(salesDataToPlot, function (d) {
+                  return d.sales;
+                })])
+             .range([rawSvg.clientHeight - padding, 0]);
+
+  xAxisGen = d3.svg.axis()
+               .scale(xScale)
+               .orient("bottom")
+               .ticks(salesDataToPlot.length - 1);
+
+  yAxisGen = d3.svg.axis()
+               .scale(yScale)
+               .orient("left")
+               .ticks(5);
+
+  lineFun = d3.svg.line()
+              .x(function (d) {
+                return xScale(d.club);
+              })
+              .y(function (d) {
+                return yScale(d.fans);
+              })
+              .interpolate("basis");
+}
+         
+function drawLineChart() {
+
+  setChartParameters();
+
+  svg.append("svg:g")
+     .attr("class", "x axis")
+     .attr("transform", "translate(0,180)")
+     .call(xAxisGen);
+
+   svg.append("svg:g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(20,0)")
+      .call(yAxisGen);
+
+   svg.append("svg:path")
+      .attr({
+        d: lineFun(salesDataToPlot),
+        "stroke": "blue",
+        "stroke-width": 2,
+        "fill": "none",
+        "class": pathClass
+   });
+}
+
+drawLineChart();
+    }
+  };
+});
+
+    //2. Implement d3-chart directive outputting a histogram of x,y
+    //3. Implement d3-chart-footer directive.
+    //    a. show the onHover/Mouseover data in the footer from the graph being dispalyed
+    //    b. be able to Update the width of the histogram in the footer and redraw the graph
+    </script>
+</body>
+</html>
